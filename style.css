@@ -1,0 +1,114 @@
+/* Styles communs à index.html et admin.html. Palette : bleu, noir, blanc ; vert pour quelques boutons. */
+:root {
+  --bg: #F6F8FC;
+  --surface: #FFFFFF;
+  --ink: #0A1020;
+  --muted: #4F5E78;
+  --line: #D3DBE9;
+  --soft: #E8EEF9;
+  --blue: #0B3D91;
+  --blue-ink: #FFFFFF;
+  --link: #0B3D91;
+  --hero: #071F4D;
+  --hero-ink: #FFFFFF;
+  --hero-muted: #BCC9E8;
+  --vert: #1B7A43;
+  --vert-ink: #FFFFFF;
+  --err: #B42318;
+  --warn-bg: #FFF4D6;
+  --warn-ink: #5C3D00;
+  --font-titre: 'UnifrakturMaguntia', 'UnifrakturCook', 'Old English Text MT', 'Times New Roman', serif;
+  --font-texte: 'Figtree', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #060A14;
+    --surface: #0D1424;
+    --ink: #EDF2FB;
+    --muted: #9BA9C4;
+    --line: #223051;
+    --soft: #111C35;
+    --blue: #2F6BDB;
+    --link: #8DB4F5;
+    --hero: #0A1633;
+    --vert: #2A9157;
+    --err: #F97066;
+    --warn-bg: #3A2D0B;
+    --warn-ink: #F6DFA0;
+    color-scheme: dark;
+  }
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-texte);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-text-size-adjust: 100%;
+}
+img { max-width: 100%; display: block; }
+a { color: var(--link); }
+h1, h2, h3 { line-height: 1.2; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+:focus-visible { outline: 3px solid var(--link); outline-offset: 2px; border-radius: 4px; }
+[hidden] { display: none !important; }
+
+.wrap {
+  width: 100%;
+  max-width: 1080px;
+  margin-inline: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.gothique { font-family: var(--font-titre); font-weight: 400; letter-spacing: 0.01em; }
+.etiquette { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+
+/* Boutons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 46px; padding: 0 22px;
+  border: 1.5px solid var(--blue); border-radius: 6px;
+  background: var(--blue); color: var(--blue-ink);
+  font: 600 1rem/1 var(--font-texte);
+  cursor: pointer; text-decoration: none;
+}
+.btn:hover { filter: brightness(1.1); }
+.btn-vert { background: var(--vert); border-color: var(--vert); color: var(--vert-ink); }
+.btn-contour { background: transparent; color: var(--link); border-color: var(--link); }
+.btn-clair { background: transparent; color: var(--hero-ink); border-color: var(--hero-ink); }
+.btn[aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; filter: none; }
+.btn-petit { min-height: 36px; padding: 0 14px; font-size: 0.9rem; }
+
+/* Champs */
+.champ { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.champ label, .champ .lib { font-weight: 600; font-size: 0.95rem; }
+.champ .aide { font-size: 0.85rem; color: var(--muted); }
+.facultatif { font-weight: 400; color: var(--muted); }
+input[type="text"], input[type="tel"], input[type="email"], input[type="date"], input[type="password"], select, textarea {
+  width: 100%; min-height: 46px; padding: 10px 12px;
+  border: 1.5px solid var(--line); border-radius: 6px;
+  background: var(--surface); color: var(--ink);
+  font: 400 1rem/1.4 var(--font-texte);
+}
+textarea { min-height: 110px; resize: vertical; }
+input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid var(--link); outline-offset: 1px; }
+.invalide { border-color: var(--err) !important; }
+.erreur { color: var(--err); font-size: 0.88rem; min-height: 0; }
+.erreur:empty { display: none; }
+
+.pastille {
+  display: inline-block; padding: 3px 10px; border-radius: 999px;
+  font-size: 0.8rem; font-weight: 600; white-space: nowrap;
+  background: var(--soft); color: var(--ink); border: 1px solid var(--line);
+}
+.pastille.vert { background: var(--vert); color: var(--vert-ink); border-color: var(--vert); }
+.pastille.alerte { background: var(--warn-bg); color: var(--warn-ink); border-color: transparent; }
+.mono { font-family: var(--font-mono); }
+
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }

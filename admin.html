@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Espace responsable</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=UnifrakturMaguntia&display=swap">
+<link rel="icon" href="logo.webp">
+<link rel="stylesheet" href="style.css">
+<style>
+  .entete { background: var(--hero); color: var(--hero-ink); }
+  .entete .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-block: 14px; }
+  .entete .marque { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .entete img { width: 40px; height: 40px; border-radius: 50%; background: #fff; flex: none; }
+  .entete .gothique { font-size: 1.6rem; line-height: 1; }
+  .entete small { display: block; font-size: 0.8rem; color: var(--hero-muted); letter-spacing: 0.1em; text-transform: uppercase; }
+  main { padding-block: 28px 60px; }
+
+  .connexion { max-width: 420px; margin: 40px auto 0; background: var(--surface); border: 1.5px solid var(--ink); border-radius: 6px; padding: 24px; display: grid; gap: 16px; }
+  .connexion h1 { font-size: 1.4rem; }
+  .msg { color: var(--err); font-weight: 500; }
+  .msg:empty { display: none; }
+
+  .onglets { display: flex; gap: 6px; flex-wrap: wrap; border-bottom: 1.5px solid var(--line); }
+  .onglet { appearance: none; background: none; border: none; border-bottom: 3px solid transparent; margin-bottom: -1.5px; padding: 10px 14px; font: 600 0.98rem var(--font-texte); color: var(--muted); cursor: pointer; display: inline-flex; gap: 8px; align-items: center; }
+  .onglet[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--blue); }
+  .onglet .n { font-size: 0.8rem; background: var(--soft); border: 1px solid var(--line); border-radius: 999px; padding: 0 8px; color: var(--ink); }
+  .outils { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin: 18px 0; }
+  .outils .champ { flex: 1 1 260px; }
+  .resume { color: var(--muted); font-size: 0.92rem; }
+
+  .liste { display: grid; gap: 10px; }
+  .demande { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+  .resume-ligne { appearance: none; width: 100%; text-align: left; background: none; border: none; color: inherit; font: inherit; padding: 14px 16px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; cursor: pointer; border-radius: 6px; }
+  .resume-ligne:hover { background: var(--soft); }
+  .resume-ligne strong { font-size: 1.05rem; overflow-wrap: anywhere; }
+  .resume-ligne .sous { grid-column: 1; color: var(--muted); font-size: 0.9rem; overflow-wrap: anywhere; }
+  .resume-ligne .pastille { grid-row: 1 / span 2; grid-column: 2; align-self: center; }
+  .detail { padding: 4px 16px 16px; border-top: 1px solid var(--line); display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 18px; }
+  .detail .portrait { width: 150px; height: 190px; object-fit: cover; background: var(--soft); border: 1.5px solid var(--ink); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 0.85rem; text-align: center; margin-top: 14px; }
+  dl.infos { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 16px; margin: 14px 0 0; }
+  dl.infos dt { color: var(--muted); }
+  dl.infos dd { margin: 0; overflow-wrap: anywhere; }
+  .actions { grid-column: 1 / -1; display: flex; gap: 10px; flex-wrap: wrap; padding-top: 4px; }
+  .vide { padding: 36px 16px; text-align: center; color: var(--muted); border: 1.5px dashed var(--line); border-radius: 6px; }
+  @media (max-width: 620px) {
+    .detail { grid-template-columns: minmax(0, 1fr); }
+    dl.infos { grid-template-columns: minmax(0, 1fr); gap: 0; }
+    dl.infos dd { margin-bottom: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="entete">
+  <div class="wrap">
+    <div class="marque">
+      <img src="logo.webp" alt="">
+      <div><span class="gothique" data-nom>Les Illuminati</span><small>Espace responsable</small></div>
+    </div>
+    <button type="button" class="btn btn-clair btn-petit" id="deconnexion" hidden>Se déconnecter</button>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <form class="connexion" id="form-connexion" novalidate>
+    <h1>Connexion</h1>
+    <div class="champ">
+      <label for="c-email">Adresse e-mail</label>
+      <input type="email" id="c-email" autocomplete="username">
+    </div>
+    <div class="champ">
+      <label for="c-mdp">Mot de passe</label>
+      <input type="password" id="c-mdp" autocomplete="current-password">
+    </div>
+    <button type="submit" class="btn">Se connecter</button>
+    <p class="msg" id="msg-connexion" role="alert"></p>
+  </form>
+
+  <div id="tableau" hidden>
+    <div class="onglets" role="tablist" id="onglets"></div>
+    <div class="outils">
+      <div class="champ">
+        <label for="recherche" class="lib">Rechercher</label>
+        <input type="text" id="recherche" placeholder="Nom, téléphone, code ou matricule">
+      </div>
+      <button type="button" class="btn btn-contour btn-petit" id="actualiser">Actualiser</button>
+    </div>
+    <p class="resume" id="resume"></p>
+    <p class="msg" id="msg-tableau" role="alert"></p>
+    <div class="liste" id="liste"></div>
+  </div>
+</main>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+(function () {
+  'use strict';
+  var C = window.CONFIG;
+  var $ = function (s) { return document.querySelector(s); };
+  document.querySelectorAll('[data-nom]').forEach(function (e) { e.textContent = C.NOM; });
+  document.title = 'Espace responsable – ' + C.NOM;
+
+  var configure = C.SUPABASE_URL && C.SUPABASE_URL.indexOf('COLLER') === -1;
+  var sb = (configure && window.supabase) ? window.supabase.createClient(C.SUPABASE_URL, C.SUPABASE_ANON_KEY) : null;
+  if (!sb) { $('#msg-connexion').textContent = 'Le site n\'est pas encore relié à Supabase. Suivez le fichier GUIDE.md, étape 5.'; }
+
+  function h(tag, props) {
+    var el = document.createElement(tag);
+    if (props) Object.keys(props).forEach(function (k) {
+      var v = props[k];
+      if (k === 'class') el.className = v;
+      else if (k.slice(0, 2) === 'on') el.addEventListener(k.slice(2), v);
+      else if (v === true) el.setAttribute(k, '');
+      else if (v !== false && v != null) el.setAttribute(k, v);
+    });
+    for (var i = 2; i < arguments.length; i++) {
+      [].concat(arguments[i]).forEach(function (kid) {
+        if (kid == null || kid === false) return;
+        el.append(kid.nodeType ? kid : document.createTextNode(kid));
+      });
+    }
+    return el;
+  }
+  function dateHeure(iso) { return iso ? new Date(iso).toLocaleString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : ''; }
+  function dateFr(iso) { return iso ? new Date(iso + 'T00:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : ''; }
+
+  var COLS = 'id,code,nom,telephone,pays_code,pays,date_naissance,profession,email,motivation,parrain,statut,reference_paiement,matricule,date_demande,date_adhesion';
+  var ONGLETS = [
+    { id: 'attente', label: 'En attente', f: function (d) { return d.statut === 'en_attente'; } },
+    { id: 'payer', label: 'À payer', f: function (d) { return d.statut === 'validee' || d.statut === 'paiement_declare'; } },
+    { id: 'membres', label: 'Membres', f: function (d) { return d.statut === 'membre'; } },
+    { id: 'refusees', label: 'Refusées', f: function (d) { return d.statut === 'refusee'; } }
+  ];
+  var etat = { donnees: [], onglet: 'attente', ouverts: {}, photos: {}, recherche: '' };
+
+  /* ---------- Connexion ---------- */
+  function afficherTableau(oui) {
+    $('#form-connexion').hidden = oui; $('#tableau').hidden = !oui; $('#deconnexion').hidden = !oui;
+  }
+  function demarrer() {
+    if (!sb) return;
+    sb.auth.getSession().then(function (r) { if (r.data && r.data.session) verifier(); });
+  }
+  function verifier() {
+    sb.rpc('est_admin').then(function (r) {
+      if (r.data === true) { afficherTableau(true); charger(); }
+      else {
+        sb.auth.signOut(); afficherTableau(false);
+        $('#msg-connexion').textContent = 'Ce compte n\'a pas accès à l\'espace responsable.';
+      }
+    });
+  }
+  $('#form-connexion').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var msg = $('#msg-connexion'); msg.textContent = '';
+    if (!sb) { msg.textContent = 'Le site n\'est pas encore relié à Supabase. Suivez le fichier GUIDE.md, étape 5.'; return; }
+    var email = $('#c-email').value.trim(), mdp = $('#c-mdp').value;
+    if (!email || !mdp) { msg.textContent = 'Entrez votre e-mail et votre mot de passe.'; return; }
+    sb.auth.signInWithPassword({ email: email, password: mdp }).then(function (r) {
+      if (r.error) { msg.textContent = 'E-mail ou mot de passe incorrect.'; return; }
+      $('#c-mdp').value = '';
+      verifier();
+    });
+  });
+  $('#deconnexion').addEventListener('click', function () {
+    sb.auth.signOut().then(function () { etat.donnees = []; afficherTableau(false); });
+  });
+
+  /* ---------- Données ---------- */
+  function charger() {
+    $('#msg-tableau').textContent = '';
+    sb.from('demandes').select(COLS).order('date_demande', { ascending: false }).limit(1000).then(function (r) {
+      if (r.error) { $('#msg-tableau').textContent = 'Impossible de charger les demandes. Vérifiez votre connexion et actualisez.'; return; }
+      etat.donnees = r.data || [];
+      dessiner();
+    });
+  }
+  $('#actualiser').addEventListener('click', charger);
+  $('#recherche').addEventListener('input', function (e) { etat.recherche = e.target.value.trim().toLowerCase(); dessiner(); });
+
+  function changerStatut(d, statut) {
+    $('#msg-tableau').textContent = '';
+    sb.from('demandes').update({ statut: statut }).eq('id', d.id).then(function (r) {
+      if (r.error) { $('#msg-tableau').textContent = 'Le changement n\'a pas été enregistré. Réessayez.'; return; }
+      d.statut = statut; dessiner();
+    });
+  }
+  function confirmerPaiement(d) {
+    $('#msg-tableau').textContent = '';
+    sb.rpc('admin_confirmer_paiement', { p_id: d.id }).then(function (r) {
+      if (r.error || !r.data) { $('#msg-tableau').textContent = 'Le paiement n\'a pas pu être confirmé. Actualisez puis réessayez.'; return; }
+      d.statut = 'membre'; d.matricule = r.data; charger();
+    });
+  }
+  function chargerPhoto(d) {
+    if (etat.photos[d.id]) return;
+    sb.from('demandes').select('photo').eq('id', d.id).single().then(function (r) {
+      if (r.data && r.data.photo) { etat.photos[d.id] = r.data.photo; dessiner(); }
+    });
+  }
+
+  /* ---------- Affichage ---------- */
+  function boutonDeuxTemps(libelle, confirmation, classe, action) {
+    var armed = false, timer = null;
+    var b = h('button', { type: 'button', class: 'btn btn-petit ' + classe }, libelle);
+    b.addEventListener('click', function () {
+      if (!armed) {
+        armed = true; b.textContent = confirmation;
+        timer = setTimeout(function () { armed = false; b.textContent = libelle; }, 4000);
+      } else { clearTimeout(timer); action(); }
+    });
+    return b;
+  }
+  function pastille(d) {
+    if (d.statut === 'paiement_declare') return h('span', { class: 'pastille alerte' }, 'Référence reçue');
+    if (d.statut === 'validee') return h('span', { class: 'pastille' }, 'Attend le paiement');
+    if (d.statut === 'membre') return h('span', { class: 'pastille vert' }, 'Membre');
+    if (d.statut === 'refusee') return h('span', { class: 'pastille' }, 'Refusée');
+    return h('span', { class: 'pastille alerte' }, 'À examiner');
+  }
+  function actions(d) {
+    var a = h('div', { class: 'actions' });
+    if (d.statut === 'en_attente') {
+      a.append(h('button', { type: 'button', class: 'btn btn-vert btn-petit', onclick: function () { changerStatut(d, 'validee'); } }, 'Valider'),
+               h('button', { type: 'button', class: 'btn btn-contour btn-petit', onclick: function () { changerStatut(d, 'refusee'); } }, 'Refuser'));
+    } else if (d.statut === 'validee' || d.statut === 'paiement_declare') {
+      a.append(boutonDeuxTemps('Paiement reçu', 'Confirmer le paiement ?', 'btn-vert', function () { confirmerPaiement(d); }),
+               h('button', { type: 'button', class: 'btn btn-contour btn-petit', onclick: function () { changerStatut(d, 'en_attente'); } }, 'Remettre en attente'));
+    } else if (d.statut === 'refusee') {
+      a.append(h('button', { type: 'button', class: 'btn btn-contour btn-petit', onclick: function () { changerStatut(d, 'en_attente'); } }, 'Remettre en attente'));
+    }
+    return a;
+  }
+  function ligne(lib, val) { return val ? [h('dt', null, lib), h('dd', null, val)] : []; }
+
+  function carte(d) {
+    var ouvert = !!etat.ouverts[d.id];
+    var resume = h('button', { type: 'button', class: 'resume-ligne', 'aria-expanded': ouvert ? 'true' : 'false', onclick: function () {
+      etat.ouverts[d.id] = !ouvert; if (!ouvert) chargerPhoto(d); dessiner();
+    } }, h('strong', null, d.nom), h('span', { class: 'sous' }, d.pays + ' · ' + d.telephone + ' · ' + dateHeure(d.date_demande)), pastille(d));
+    var c = h('div', { class: 'demande' }, resume);
+    if (ouvert) {
+      var photo = etat.photos[d.id]
+        ? h('img', { class: 'portrait', src: etat.photos[d.id], alt: 'Photo de ' + d.nom })
+        : h('div', { class: 'portrait' }, 'Chargement de la photo…');
+      c.append(h('div', { class: 'detail' }, photo,
+        h('dl', { class: 'infos' },
+          ligne('Code de suivi', d.code), ligne('Matricule', d.matricule),
+          ligne('Pays', d.pays), ligne('Téléphone', d.telephone), ligne('E-mail', d.email),
+          ligne('Date de naissance', dateFr(d.date_naissance)), ligne('Profession', d.profession),
+          ligne('Parrain', d.parrain), ligne('Motivation', d.motivation),
+          ligne('Référence de paiement', d.reference_paiement), ligne('Date d\'adhésion', dateFr(d.date_adhesion))),
+        actions(d)));
+    }
+    return c;
+  }
+
+  function dessiner() {
+    var tabs = $('#onglets'); tabs.textContent = '';
+    ONGLETS.forEach(function (o) {
+      var n = etat.donnees.filter(o.f).length;
+      tabs.append(h('button', { type: 'button', role: 'tab', class: 'onglet', 'aria-selected': etat.onglet === o.id ? 'true' : 'false', onclick: function () { etat.onglet = o.id; dessiner(); } },
+        o.label, h('span', { class: 'n' }, String(n))));
+    });
+    var courant = ONGLETS.filter(function (o) { return o.id === etat.onglet; })[0];
+    var q = etat.recherche;
+    var lignes = etat.donnees.filter(courant.f).filter(function (d) {
+      if (!q) return true;
+      return [d.nom, d.telephone, d.code, d.matricule, d.pays].join(' ').toLowerCase().indexOf(q) !== -1;
+    });
+    var aVerifier = etat.onglet === 'payer' ? lignes.filter(function (d) { return d.statut === 'paiement_declare'; }).length : 0;
+    $('#resume').textContent = lignes.length + ' demande' + (lignes.length > 1 ? 's' : '') + (aVerifier ? ' · ' + aVerifier + ' avec une référence de paiement à vérifier' : '');
+    var liste = $('#liste'); liste.textContent = '';
+    if (!lignes.length) {
+      liste.append(h('div', { class: 'vide' }, q ? 'Aucun résultat pour cette recherche.' : 'Aucune demande dans cet onglet.'));
+      return;
+    }
+    lignes.forEach(function (d) { liste.append(carte(d)); });
+  }
+
+  demarrer();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,624 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Les Illuminati</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=UnifrakturMaguntia&display=swap">
+<link rel="icon" href="logo.webp">
+<link rel="stylesheet" href="style.css">
+<style>
+  .top { position: sticky; top: 0; z-index: 20; background: var(--surface); border-bottom: 1px solid var(--line); }
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-block: 10px; }
+  .marque { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); min-width: 0; }
+  .marque img { width: 42px; height: 42px; border-radius: 50%; background: #fff; flex: none; }
+  .marque span { font-size: 1.6rem; line-height: 1; }
+  .top nav { display: flex; gap: 18px; flex-wrap: wrap; }
+  .top nav a { color: var(--ink); text-decoration: none; font-weight: 500; font-size: 0.95rem; }
+  .top nav a:hover { text-decoration: underline; }
+
+  .hero { background: var(--hero); color: var(--hero-ink); }
+  .hero .wrap { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 40px; align-items: center; padding-block: 64px 72px; }
+  .hero h1 { font-size: clamp(3.2rem, 11vw, 6.6rem); line-height: 0.95; }
+  .hero .accroche { margin-top: 20px; font-size: 1.25rem; max-width: 30ch; color: var(--hero-muted); }
+  .hero .actions { margin-top: 30px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .hero-logo { width: 100%; max-width: 280px; aspect-ratio: 1; border-radius: 50%; background: #fff; padding: 8px; justify-self: center; }
+
+  section { padding-block: 64px; }
+  section h2 { font-size: 1.9rem; margin-bottom: 10px; }
+  .intro { color: var(--muted); max-width: 60ch; margin-bottom: 28px; }
+
+  .valeurs { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 48px; }
+  .valeurs li { padding: 18px 0; border-top: 1px solid var(--line); }
+  .valeurs strong { display: block; font-size: 1.15rem; margin-bottom: 4px; }
+  .valeurs span { color: var(--muted); }
+  .note { margin-top: 22px; font-size: 0.9rem; color: var(--muted); max-width: 70ch; }
+
+  .parcours { background: var(--soft); }
+  .etapes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; counter-reset: e; }
+  .etapes li { counter-increment: e; border-top: 3px solid var(--blue); padding-top: 14px; }
+  .etapes li::before { content: "Étape " counter(e); display: block; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
+  .etapes strong { display: block; margin-bottom: 4px; }
+  .etapes span { color: var(--muted); font-size: 0.95rem; }
+
+  .form-wrap { max-width: 760px; }
+  .grille { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+  .grille .large { grid-column: 1 / -1; }
+  .photo-zone { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  .photo-apercu { width: 112px; height: 144px; border: 2px dashed var(--line); background: var(--soft); border-radius: 4px; overflow: hidden; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 0.85rem; text-align: center; flex: none; }
+  .photo-apercu img { width: 100%; height: 100%; object-fit: cover; }
+  input[type="file"] { font: inherit; max-width: 100%; }
+
+  fieldset.regles { margin: 30px 0 0; padding: 22px; border: 1.5px solid var(--ink); border-radius: 6px; background: var(--surface); }
+  fieldset.regles legend { padding: 0 8px; font-family: var(--font-titre); font-size: 1.6rem; }
+  .regles p.intro { margin-bottom: 14px; }
+  .regle { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; border-top: 1px solid var(--line); cursor: pointer; }
+  .regle input { width: 22px; height: 22px; margin: 2px 0 0; flex: none; accent-color: var(--blue); }
+  .regle span { min-width: 0; }
+  .envoi { margin-top: 24px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  .compteur { color: var(--muted); font-size: 0.95rem; }
+  .msg { margin-top: 12px; color: var(--err); font-weight: 500; }
+  .msg:empty { display: none; }
+
+  .carte { background: var(--surface); border: 1.5px solid var(--ink); border-radius: 6px; padding: 24px; max-width: 760px; }
+  .carte h3 { font-size: 1.35rem; margin-bottom: 8px; }
+  .code-suivi { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin: 16px 0; }
+  .code-suivi output { font-family: var(--font-mono); font-size: 1.6rem; font-weight: 700; letter-spacing: 0.06em; background: var(--soft); border: 1.5px solid var(--blue); padding: 8px 14px; border-radius: 4px; overflow-wrap: anywhere; }
+
+  .suivi-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)) auto; gap: 14px; align-items: end; max-width: 760px; }
+  #resultat { margin-top: 28px; }
+  .bloc { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
+  .bloc h4 { margin: 0 0 8px; font-size: 1.05rem; }
+  dl.infos { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 8px 18px; margin: 12px 0; }
+  dl.infos dt { color: var(--muted); }
+  dl.infos dd { margin: 0; font-weight: 600; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; overflow-wrap: anywhere; }
+  .ligne { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; }
+  .ligne .champ { flex: 1 1 220px; }
+  .liste-etapes { margin: 10px 0 0; padding-left: 1.2em; color: var(--muted); }
+
+  .bandeau { background: var(--warn-bg); color: var(--warn-ink); padding: 12px 0; font-size: 0.95rem; }
+
+  footer { border-top: 1px solid var(--line); padding-block: 28px; color: var(--muted); font-size: 0.9rem; }
+
+  /* Fiche d'inscription (aspect "papier", identique en clair et en sombre) */
+  .fiche-wrap { width: 100%; overflow: hidden; margin-top: 16px; display: flex; justify-content: center; }
+  .fiche { width: 700px; flex: none; transform-origin: top center; background: #FFFFFF; color: #0A1020; border: 8px double #0B3D91; padding: 10px; position: relative; font-family: var(--font-texte); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .fiche-in { position: relative; border: 1px solid #0A1020; padding: 24px 28px 22px; overflow: hidden; }
+  .filigrane { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; font-family: var(--font-titre); font-size: 130px; color: #0B3D91; opacity: 0.07; transform: rotate(-24deg); white-space: nowrap; }
+  .fiche-haut { position: relative; display: grid; grid-template-columns: 100px minmax(0, 1fr) 118px; gap: 14px; align-items: center; }
+  .fiche-logo { width: 100px; height: 100px; object-fit: contain; }
+  .fiche-photo { width: 118px; height: 150px; object-fit: cover; border: 2px solid #0A1020; background: #E8EEF9; }
+  .fiche-titre-bloc { text-align: center; }
+  .fiche-nom { font-family: var(--font-titre); font-size: 58px; line-height: 1; color: #0B3D91; overflow-wrap: anywhere; }
+  .fiche-sous { margin-top: 10px; font-size: 12px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; border-top: 1.5px solid #0A1020; border-bottom: 1.5px solid #0A1020; padding: 5px 0; }
+  .fiche-matricule { position: relative; margin: 22px 0 14px; padding: 10px 14px; text-align: center; background: #E8EEF9; border: 1.5px solid #0B3D91; }
+  .fiche-matricule small { display: block; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #3F4D68; font-weight: 600; }
+  .fiche-matricule b { font-family: var(--font-mono); font-size: 27px; letter-spacing: 0.05em; color: #0A1020; }
+  .fiche-infos { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 0 28px; }
+  .fiche-infos div { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid #B9C6E0; font-size: 14px; }
+  .fiche-infos span { color: #3F4D68; }
+  .fiche-infos b { text-align: right; }
+  .fiche-infos .plein { grid-column: 1 / -1; }
+  .fiche-bienvenue { position: relative; margin-top: 20px; text-align: center; }
+  .fiche-bienvenue h3 { font-family: var(--font-titre); font-weight: 400; font-size: 30px; color: #0B3D91; margin-bottom: 6px; }
+  .fiche-bienvenue p { font-size: 14px; line-height: 1.65; max-width: 540px; margin: 0 auto; }
+  .fiche-bas { position: relative; display: grid; grid-template-columns: 1fr 230px; gap: 24px; align-items: end; margin-top: 26px; }
+  .fiche-bas .date { font-size: 12.5px; color: #3F4D68; }
+  .signature { text-align: center; font-size: 12px; color: #3F4D68; }
+  .signature .trait { height: 64px; border-bottom: 1.5px solid #0A1020; display: flex; align-items: flex-end; justify-content: center; }
+  .signature img { max-height: 60px; width: auto; }
+  .actions-fiche { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 18px; }
+
+  @page { size: A4; margin: 10mm; }
+  @media print {
+    body * { visibility: hidden; }
+    .fiche-wrap, .fiche-wrap * { visibility: visible; }
+    .fiche-wrap { position: absolute; left: 0; top: 0; width: 100%; height: auto !important; margin: 0; }
+    .fiche { transform: none !important; }
+  }
+
+  @media (max-width: 820px) {
+    .hero .wrap { grid-template-columns: minmax(0, 1fr); padding-block: 44px 52px; gap: 28px; }
+    .hero-logo { max-width: 180px; justify-self: start; order: -1; }
+    .valeurs { grid-template-columns: minmax(0, 1fr); }
+    .etapes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .suivi-form { grid-template-columns: minmax(0, 1fr); }
+    section { padding-block: 48px; }
+  }
+  @media (max-width: 560px) {
+    .grille { grid-template-columns: minmax(0, 1fr); }
+    .etapes { grid-template-columns: minmax(0, 1fr); }
+    .top nav { gap: 14px; }
+    dl.infos { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+    dl.infos dd { margin-bottom: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bandeau" id="bandeau-config" hidden>
+  <div class="wrap">Le site n'est pas encore relié à Supabase : les demandes ne peuvent pas être enregistrées. Suivez le fichier GUIDE.md, étape 5.</div>
+</div>
+
+<header class="top">
+  <div class="wrap bar">
+    <a class="marque" href="#haut">
+      <img src="logo.webp" alt="Logo">
+      <span class="gothique" data-nom>Les Illuminati</span>
+    </a>
+    <nav aria-label="Navigation principale">
+      <a href="#valeurs">Valeurs</a>
+      <a href="#parcours">Parcours</a>
+      <a href="#demande">Demande</a>
+      <a href="#suivi">Suivi</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="haut" style="padding:0">
+    <div class="wrap">
+      <div>
+        <h1 class="gothique" data-nom>Les Illuminati</h1>
+        <p class="accroche">Rejoignez <span data-nom="le">les Illuminati</span>. Ensemble, nous sommes plus forts.</p>
+        <div class="actions">
+          <a class="btn btn-clair" href="#demande">Faire ma demande</a>
+          <a class="btn btn-clair" href="#suivi">Suivre ma demande</a>
+        </div>
+      </div>
+      <img class="hero-logo" src="logo.webp" alt="Logo de la fraternité">
+    </div>
+  </section>
+
+  <section id="valeurs">
+    <div class="wrap">
+      <h2>Nos valeurs</h2>
+      <p class="intro">Six principes guident la vie <span data-nom="des">des Illuminati</span> et la conduite de ses membres.</p>
+      <ul class="valeurs">
+        <li><strong>Respect</strong><span>Envers chaque frère, envers les anciens et envers la terre, que nous tenons pour sacrée.</span></li>
+        <li><strong>Solidarité</strong><span>Dans l'épreuve comme dans la réussite, aucun frère n'avance seul.</span></li>
+        <li><strong>Dévouement</strong><span>Donner son temps et son énergie au service de la loge et de ses membres.</span></li>
+        <li><strong>Richesse</strong><span>Bâtir ensemble des ressources et partager les opportunités entre frères.</span></li>
+        <li><strong>Prospérité</strong><span>Faire grandir les projets de chacun avec le soutien de tous.</span></li>
+        <li><strong>Célébrité</strong><span>Faire rayonner le nom de la fraternité et celui de ses membres.</span></li>
+      </ul>
+      <p class="note">Ces valeurs sont des idéaux que les membres cultivent ensemble. Elles ne constituent pas une promesse de résultat pour celui qui adhère.</p>
+    </div>
+  </section>
+
+  <section class="parcours" id="parcours">
+    <div class="wrap">
+      <h2>Comment ça se passe</h2>
+      <p class="intro">Quatre étapes entre votre demande et votre fiche d'inscription.</p>
+      <ol class="etapes">
+        <li><strong>Vous faites votre demande</strong><span>Remplissez le formulaire, joignez votre photo et acceptez les règles.</span></li>
+        <li><strong>Nous examinons votre demande</strong><span>Vous suivez son avancement avec votre code de suivi.</span></li>
+        <li><strong>Vous réglez votre adhésion</strong><span>Une fois votre demande validée, vous payez le montant indiqué pour votre pays.</span></li>
+        <li><strong>Vous recevez votre fiche</strong><span>Elle porte votre numéro matricule et prouve que vous êtes membre.</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="demande">
+    <div class="wrap">
+      <h2>Faire ma demande d'adhésion</h2>
+      <p class="intro">Les champs marqués d'un astérisque sont obligatoires. Vous recevrez un code de suivi à la fin.</p>
+
+      <div class="form-wrap">
+        <form id="form-demande" novalidate>
+          <div class="grille">
+            <div class="champ large">
+              <label for="nom">Nom et prénoms *</label>
+              <input type="text" id="nom" name="nom" autocomplete="name" maxlength="120">
+              <span class="erreur" id="e-nom"></span>
+            </div>
+            <div class="champ">
+              <label for="tel">Numéro de téléphone *</label>
+              <input type="tel" id="tel" name="tel" autocomplete="tel" inputmode="tel" placeholder="+225 07 12 34 56 78">
+              <span class="aide">Avec l'indicatif de votre pays. Il sert aussi à suivre votre demande.</span>
+              <span class="erreur" id="e-tel"></span>
+            </div>
+            <div class="champ">
+              <label for="pays">Pays *</label>
+              <select id="pays" name="pays"></select>
+              <span class="erreur" id="e-pays"></span>
+            </div>
+            <div class="champ">
+              <label for="naissance">Date de naissance *</label>
+              <input type="date" id="naissance" name="naissance" autocomplete="bday">
+              <span class="erreur" id="e-naissance"></span>
+            </div>
+            <div class="champ">
+              <label for="profession">Profession <span class="facultatif">(facultatif)</span></label>
+              <input type="text" id="profession" name="profession" maxlength="120">
+            </div>
+            <div class="champ">
+              <label for="email">Adresse e-mail <span class="facultatif">(facultatif)</span></label>
+              <input type="email" id="email" name="email" autocomplete="email" maxlength="160">
+              <span class="erreur" id="e-email"></span>
+            </div>
+            <div class="champ">
+              <label for="parrain">Nom du parrain <span class="facultatif">(facultatif)</span></label>
+              <input type="text" id="parrain" name="parrain" maxlength="120">
+            </div>
+            <div class="champ large">
+              <label for="motivation">Pourquoi voulez-vous rejoindre <span data-nom="le">les Illuminati</span> ? *</label>
+              <textarea id="motivation" name="motivation" maxlength="2000"></textarea>
+              <span class="erreur" id="e-motivation"></span>
+            </div>
+            <div class="champ large">
+              <span class="lib" id="lib-photo">Votre photo *</span>
+              <div class="photo-zone">
+                <div class="photo-apercu" id="photo-apercu">Aucune photo</div>
+                <div class="champ">
+                  <input type="file" id="photo" accept="image/*" aria-labelledby="lib-photo">
+                  <span class="aide">Portrait de face, visage bien visible. Elle figurera sur votre fiche.</span>
+                </div>
+              </div>
+              <span class="erreur" id="e-photo"></span>
+            </div>
+          </div>
+
+          <fieldset class="regles">
+            <legend>Les règles</legend>
+            <p class="intro">Cochez chaque règle pour confirmer que vous vous engagez à la respecter.</p>
+            <label class="regle"><input type="checkbox"><span>Je m'engage à ne pas avoir de rapport intime avec une femme le lundi, ni jamais à même le sol, car dans la fraternité la terre est un élément sacré que l'on respecte.</span></label>
+            <label class="regle"><input type="checkbox"><span>Je m'engage à ne pas manger de viande le vendredi.</span></label>
+            <label class="regle"><input type="checkbox"><span>Je m'engage à ne jamais tuer.</span></label>
+            <label class="regle"><input type="checkbox"><span>Je m'engage à toujours obéir à mon parrain.</span></label>
+            <label class="regle"><input type="checkbox"><span>Je m'engage à ne jamais contacter un membre de la loge sans la permission des supérieurs.</span></label>
+            <label class="regle"><input type="checkbox"><span>Je m'engage à régler tout conflit entre membres devant le tribunal de la loge, et non directement entre confrères.</span></label>
+            <label class="regle"><input type="checkbox"><span>Je m'engage à aviser la loge de tout déplacement, et avant d'aller dans une loge d'un autre pays.</span></label>
+            <label class="regle"><input type="checkbox"><span>J'accepte que les autres règles me soient communiquées lors du grand pèlerinage.</span></label>
+          </fieldset>
+
+          <div class="envoi">
+            <button type="submit" class="btn btn-vert" id="envoyer" aria-disabled="true">Envoyer ma demande</button>
+            <span class="compteur" id="compteur" aria-live="polite"></span>
+          </div>
+          <p class="msg" id="msg-form" role="alert"></p>
+        </form>
+
+        <div class="carte" id="confirmation" hidden>
+          <h3>Demande envoyée</h3>
+          <p>Votre demande est enregistrée avec le statut « Demande en attente ». Notez bien votre code de suivi : il vous permet de suivre votre demande avec votre numéro de téléphone.</p>
+          <div class="code-suivi">
+            <output id="code-affiche"></output>
+            <button type="button" class="btn btn-contour btn-petit" id="copier-code">Copier le code</button>
+          </div>
+          <a class="btn" href="#suivi">Suivre ma demande</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="suivi" class="parcours">
+    <div class="wrap">
+      <h2>Suivre ma demande</h2>
+      <p class="intro">Entrez le code reçu à la fin de votre demande et le numéro de téléphone utilisé dans le formulaire.</p>
+      <form class="suivi-form" id="form-suivi" novalidate>
+        <div class="champ">
+          <label for="s-code">Code de suivi</label>
+          <input type="text" id="s-code" autocomplete="off" autocapitalize="characters" placeholder="FR-ABCD-2345">
+        </div>
+        <div class="champ">
+          <label for="s-tel">Numéro de téléphone</label>
+          <input type="tel" id="s-tel" inputmode="tel" autocomplete="tel">
+        </div>
+        <button type="submit" class="btn">Voir mon statut</button>
+      </form>
+      <p class="msg" id="msg-suivi" role="alert"></p>
+      <div id="resultat" aria-live="polite"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">© <span id="annee"></span> <span data-nom>Les Illuminati</span>. Les informations transmises ne sont consultables que par les responsables de la fraternité.</div>
+</footer>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+(function () {
+  'use strict';
+  var C = window.CONFIG;
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+
+  /* ---------- Nom de la fraternité ---------- */
+  var FORMES = { le: C.NOM_LE, des: C.NOM_DES, aux: C.NOM_AUX };
+  document.querySelectorAll('[data-nom]').forEach(function (e) { e.textContent = FORMES[e.getAttribute('data-nom')] || C.NOM; });
+  document.title = C.NOM;
+  $('#annee').textContent = new Date().getFullYear();
+
+  /* ---------- Supabase ---------- */
+  var sb = null;
+  var configure = C.SUPABASE_URL && C.SUPABASE_URL.indexOf('COLLER') === -1;
+  if (configure && window.supabase) { sb = window.supabase.createClient(C.SUPABASE_URL, C.SUPABASE_ANON_KEY); }
+  if (!sb) { $('#bandeau-config').hidden = false; }
+
+  /* ---------- Outils ---------- */
+  function h(tag, props) {
+    var el = document.createElement(tag);
+    if (props) Object.keys(props).forEach(function (k) {
+      var v = props[k];
+      if (k === 'class') el.className = v;
+      else if (k.slice(0, 2) === 'on') el.addEventListener(k.slice(2), v);
+      else if (v === true) el.setAttribute(k, '');
+      else if (v !== false && v != null) el.setAttribute(k, v);
+    });
+    for (var i = 2; i < arguments.length; i++) {
+      var kids = [].concat(arguments[i]);
+      kids.forEach(function (kid) {
+        if (kid == null || kid === false) return;
+        el.append(kid.nodeType ? kid : document.createTextNode(kid));
+      });
+    }
+    return el;
+  }
+  function copier(texte, bouton) {
+    var fini = function () { var old = bouton.textContent; bouton.textContent = 'Copié'; setTimeout(function () { bouton.textContent = old; }, 1800); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(texte).then(fini, function () { repli(); });
+    } else { repli(); }
+    function repli() {
+      var t = document.createElement('textarea'); t.value = texte; document.body.append(t); t.select();
+      try { document.execCommand('copy'); } catch (e) {}
+      t.remove(); fini();
+    }
+  }
+  function remplacerNom(t) { return t.split('{NOM}').join(C.NOM).split('{LE}').join(C.NOM_LE).split('{DES}').join(C.NOM_DES).split('{AUX}').join(C.NOM_AUX); }
+  function dateFr(iso) {
+    if (!iso) return '';
+    var d = new Date(iso + 'T00:00:00');
+    return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+  function stocker(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function lire(k) { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } }
+
+  /* ---------- Pays (Côte d'Ivoire en premier) ---------- */
+  var PAYS = [
+    ['CI', "Côte d'Ivoire"], ['BJ', 'Bénin'], ['CG', 'Congo-Brazzaville'], ['CD', 'RDC (Congo-Kinshasa)'],
+    ['DZ', 'Algérie'], ['AO', 'Angola'], ['BF', 'Burkina Faso'], ['BI', 'Burundi'], ['CM', 'Cameroun'],
+    ['CV', 'Cap-Vert'], ['CF', 'Centrafrique'], ['TD', 'Tchad'], ['KM', 'Comores'], ['DJ', 'Djibouti'],
+    ['GA', 'Gabon'], ['GM', 'Gambie'], ['GH', 'Ghana'], ['GN', 'Guinée'], ['GQ', 'Guinée équatoriale'],
+    ['GW', 'Guinée-Bissau'], ['LR', 'Liberia'], ['MG', 'Madagascar'], ['ML', 'Mali'], ['MA', 'Maroc'],
+    ['MR', 'Mauritanie'], ['NE', 'Niger'], ['NG', 'Nigeria'], ['RW', 'Rwanda'], ['ST', 'Sao Tomé-et-Príncipe'],
+    ['SN', 'Sénégal'], ['SL', 'Sierra Leone'], ['TG', 'Togo'], ['TN', 'Tunisie'],
+    ['FR', 'France'], ['BE', 'Belgique'], ['CH', 'Suisse'], ['CA', 'Canada'], ['DE', 'Allemagne'],
+    ['GB', 'Royaume-Uni'], ['US', 'États-Unis'], ['XX', 'Autre pays']
+  ];
+  var selPays = $('#pays');
+  selPays.append(h('option', { value: '' }, 'Choisir votre pays'));
+  PAYS.forEach(function (p) { selPays.append(h('option', { value: p[0] }, p[1])); });
+  function nomPays(code) { for (var i = 0; i < PAYS.length; i++) if (PAYS[i][0] === code) return PAYS[i][1]; return code; }
+
+  /* ---------- Photo ---------- */
+  var photoData = '';
+  $('#photo').addEventListener('change', function (e) {
+    var f = e.target.files[0];
+    $('#e-photo').textContent = '';
+    if (!f) { photoData = ''; return; }
+    var img = new Image(), url = URL.createObjectURL(f);
+    img.onload = function () {
+      var max = 420, k = Math.min(1, max / Math.max(img.width, img.height));
+      var w = Math.round(img.width * k), hh = Math.round(img.height * k);
+      var c = document.createElement('canvas'); c.width = w; c.height = hh;
+      c.getContext('2d').drawImage(img, 0, 0, w, hh);
+      URL.revokeObjectURL(url);
+      photoData = c.toDataURL('image/jpeg', 0.8);
+      var ap = $('#photo-apercu'); ap.textContent = ''; ap.append(h('img', { src: photoData, alt: 'Aperçu de votre photo' }));
+    };
+    img.onerror = function () {
+      photoData = '';
+      $('#e-photo').textContent = 'Cette photo est illisible. Choisissez une image JPG ou PNG.';
+    };
+    img.src = url;
+  });
+
+  /* ---------- Règles à cocher ---------- */
+  var cases = Array.prototype.slice.call(document.querySelectorAll('.regle input'));
+  var bouton = $('#envoyer');
+  function majRegles() {
+    var n = cases.filter(function (c) { return c.checked; }).length;
+    var ok = n === cases.length;
+    bouton.setAttribute('aria-disabled', ok ? 'false' : 'true');
+    $('#compteur').textContent = ok ? 'Toutes les règles sont acceptées.' : n + ' règle' + (n > 1 ? 's' : '') + ' sur ' + cases.length + ' acceptée' + (n > 1 ? 's' : '');
+    if (ok) $('#msg-form').textContent = '';
+  }
+  cases.forEach(function (c) { c.addEventListener('change', majRegles); });
+  majRegles();
+
+  /* ---------- Envoi de la demande ---------- */
+  function erreur(id, texte, champ) {
+    $('#e-' + id).textContent = texte;
+    if (champ) champ.classList.toggle('invalide', !!texte);
+    return !texte;
+  }
+  $('#form-demande').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var msg = $('#msg-form'); msg.textContent = '';
+    var nom = $('#nom').value.trim(), tel = $('#tel').value.trim(), pays = $('#pays').value;
+    var naiss = $('#naissance').value, motiv = $('#motivation').value.trim(), mail = $('#email').value.trim();
+    var chiffres = tel.replace(/\D/g, '');
+    var ok = true;
+    ok = erreur('nom', nom.length < 3 ? 'Entrez votre nom et vos prénoms' : '', $('#nom')) && ok;
+    ok = erreur('tel', (chiffres.length < 8 || chiffres.length > 15) ? 'Entrez un numéro valide, avec l\'indicatif' : '', $('#tel')) && ok;
+    ok = erreur('pays', !pays ? 'Choisissez votre pays' : '', $('#pays')) && ok;
+    ok = erreur('naissance', (!naiss || new Date(naiss) > new Date() || naiss < '1900-01-01') ? 'Entrez une date de naissance valide' : '', $('#naissance')) && ok;
+    ok = erreur('email', (mail && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail)) ? 'Cette adresse e-mail semble incorrecte' : '', $('#email')) && ok;
+    ok = erreur('motivation', motiv.length < 10 ? 'Expliquez votre motivation en quelques mots' : '', $('#motivation')) && ok;
+    ok = erreur('photo', !photoData ? 'Ajoutez votre photo' : '', null) && ok;
+    if (!ok) { var premier = document.querySelector('.invalide') || $('#e-photo'); premier.scrollIntoView({ block: 'center' }); msg.textContent = 'Corrigez les champs signalés pour continuer.'; return; }
+    if (bouton.getAttribute('aria-disabled') === 'true') { msg.textContent = 'Cochez les ' + cases.length + ' règles pour envoyer votre demande.'; return; }
+    if (!sb) { msg.textContent = 'Le site n\'est pas encore relié à Supabase. Suivez le fichier GUIDE.md.'; return; }
+
+    bouton.setAttribute('aria-disabled', 'true'); bouton.textContent = 'Envoi en cours…';
+    sb.rpc('soumettre_demande', {
+      p_nom: nom, p_tel: tel, p_pays_code: pays, p_pays: nomPays(pays), p_naissance: naiss,
+      p_profession: $('#profession').value.trim(), p_email: mail, p_motivation: motiv,
+      p_parrain: $('#parrain').value.trim(), p_photo: photoData
+    }).then(function (r) {
+      bouton.textContent = 'Envoyer ma demande'; majRegles();
+      if (r.error || !r.data) { msg.textContent = 'La demande n\'a pas pu être envoyée. Vérifiez votre connexion et réessayez.'; return; }
+      stocker('fr-code', r.data); stocker('fr-tel', tel);
+      $('#code-affiche').textContent = r.data;
+      $('#form-demande').hidden = true;
+      $('#confirmation').hidden = false;
+      $('#s-code').value = r.data; $('#s-tel').value = tel;
+      $('#confirmation').scrollIntoView({ block: 'center' });
+    });
+  });
+  $('#copier-code').addEventListener('click', function (e) { copier($('#code-affiche').textContent, e.currentTarget); });
+
+  /* ---------- Suivi ---------- */
+  $('#s-code').value = lire('fr-code'); $('#s-tel').value = lire('fr-tel');
+  var courant = { code: '', tel: '' };
+
+  $('#form-suivi').addEventListener('submit', function (e) {
+    e.preventDefault();
+    courant.code = $('#s-code').value.trim().toUpperCase();
+    courant.tel = $('#s-tel').value.trim();
+    chargerSuivi();
+  });
+
+  function chargerSuivi() {
+    var msg = $('#msg-suivi'), zone = $('#resultat');
+    msg.textContent = ''; zone.textContent = '';
+    if (!courant.code || courant.tel.replace(/\D/g, '').length < 8) { msg.textContent = 'Entrez votre code de suivi et votre numéro de téléphone.'; return; }
+    if (!sb) { msg.textContent = 'Le site n\'est pas encore relié à Supabase. Suivez le fichier GUIDE.md.'; return; }
+    sb.rpc('suivre_demande', { p_code: courant.code, p_tel: courant.tel }).then(function (r) {
+      if (r.error) { msg.textContent = 'Impossible de vérifier votre demande pour le moment. Réessayez dans un instant.'; return; }
+      if (!r.data) { msg.textContent = 'Aucune demande trouvée. Vérifiez votre code et votre numéro.'; return; }
+      stocker('fr-code', courant.code); stocker('fr-tel', courant.tel);
+      afficher(r.data);
+    });
+  }
+
+  function afficher(d) {
+    var zone = $('#resultat'); zone.textContent = '';
+    var montant = C.MONTANTS[d.pays_code] || C.MONTANT_DEFAUT;
+    var carte = h('div', { class: 'carte' });
+
+    if (d.statut === 'en_attente') {
+      carte.append(h('span', { class: 'pastille alerte' }, 'Demande en attente'),
+        h('h3', { style: 'margin-top:12px' }, d.nom),
+        h('p', null, 'Votre demande a bien été reçue. Elle est en cours d\'examen.'));
+      zone.append(carte); return;
+    }
+
+    if (d.statut === 'validee' || d.statut === 'paiement_declare') {
+      carte.append(h('span', { class: 'pastille vert' }, 'Validée'),
+        h('h3', { style: 'margin-top:12px' }, d.nom),
+        h('p', null, 'Votre demande a été validée. Bienvenue ' + C.NOM_AUX + '. Il reste à régler votre adhésion pour obtenir votre fiche d\'inscription.'));
+      carte.append(blocPaiement(d, montant));
+      zone.append(carte); return;
+    }
+
+    if (d.statut === 'membre') {
+      carte.append(h('span', { class: 'pastille vert' }, 'Membre'),
+        h('h3', { style: 'margin-top:12px' }, 'Votre paiement est confirmé'),
+        h('p', null, 'Voici votre fiche d\'inscription. Vous pouvez l\'imprimer ou l\'enregistrer en PDF.'));
+      zone.append(carte);
+      zone.append(construireFiche(d));
+      zone.append(h('div', { class: 'actions-fiche' },
+        h('button', { type: 'button', class: 'btn', onclick: function () { window.print(); } }, 'Imprimer ou enregistrer en PDF')));
+      ajusterFiche();
+    }
+  }
+
+  function blocPaiement(d, montant) {
+    var bloc = h('div', { class: 'bloc' });
+    if (d.pays_code === 'BJ') {
+      var b = C.BENIN;
+      var cp = h('button', { type: 'button', class: 'btn btn-contour btn-petit', onclick: function (e) { copier(b.numero, e.currentTarget); } }, 'Copier');
+      bloc.append(h('h4', null, 'Payer par ' + b.operateur),
+        h('dl', { class: 'infos' },
+          h('dt', null, 'Montant'), h('dd', null, montant),
+          h('dt', null, 'Numéro'), h('dd', null, b.numero, cp),
+          h('dt', null, 'Nom du compte'), h('dd', null, b.titulaire)),
+        h('ol', { class: 'liste-etapes' },
+          h('li', null, 'Envoyez ' + montant + ' au numéro ci-dessus par ' + b.operateur + '.'),
+          h('li', null, 'Saisissez ci-dessous la référence de la transaction reçue par SMS.'),
+          h('li', null, 'Nous vérifions votre paiement, puis votre fiche apparaît sur cette page.')));
+      if (d.statut === 'paiement_declare') {
+        bloc.append(h('p', { class: 'note', style: 'color:var(--ink)' }, 'Référence reçue : ' + (d.reference || '') + '. Votre paiement est en cours de vérification. Revenez sur cette page plus tard.'));
+      }
+      var champ = h('input', { type: 'text', id: 'ref', maxlength: '60', autocomplete: 'off', value: d.reference || '' });
+      var err = h('span', { class: 'erreur' });
+      var envoyer = h('button', { type: 'button', class: 'btn', onclick: function () {
+        err.textContent = '';
+        var v = champ.value.trim();
+        if (v.length < 3) { err.textContent = 'Entrez la référence de la transaction'; return; }
+        envoyer.textContent = 'Envoi en cours…';
+        sb.rpc('declarer_paiement', { p_code: courant.code, p_tel: courant.tel, p_ref: v }).then(function (r) {
+          envoyer.textContent = d.statut === 'paiement_declare' ? 'Modifier la référence' : 'Envoyer la référence';
+          if (r.error || !r.data) { err.textContent = 'La référence n\'a pas pu être enregistrée. Réessayez.'; return; }
+          chargerSuivi();
+        });
+      } }, d.statut === 'paiement_declare' ? 'Modifier la référence' : 'Envoyer la référence');
+      bloc.append(h('div', { class: 'ligne', style: 'margin-top:14px' },
+        h('div', { class: 'champ' }, h('label', { for: 'ref' }, 'Référence de la transaction'), champ, err), envoyer));
+    } else {
+      var message = 'Bonjour, je m\'appelle ' + d.nom + ' (' + d.pays + '). Ma demande ' + C.NOM_AUX.replace('aux','auprès des') + ' a été validée. ' +
+        'Mon code de suivi est ' + d.code + '. Je souhaite régler mon adhésion (' + montant + '). Merci de m\'indiquer comment procéder.';
+      bloc.append(h('h4', null, 'Payer auprès du comptable'),
+        h('dl', { class: 'infos' }, h('dt', null, 'Montant'), h('dd', null, montant)),
+        h('ol', { class: 'liste-etapes' },
+          h('li', null, 'Copiez votre message ci-dessous.'),
+          h('li', null, 'Ouvrez WhatsApp, collez le message et envoyez-le au comptable.'),
+          h('li', null, 'Le comptable vous explique comment payer et prévient les responsables.'),
+          h('li', null, 'Une fois le paiement confirmé, revenez sur cette page pour voir votre fiche.')),
+        h('p', { class: 'mono', style: 'margin-top:14px;padding:12px;background:var(--soft);border:1px solid var(--line);border-radius:4px;font-size:0.9rem;overflow-wrap:anywhere' }, message),
+        h('div', { class: 'actions-fiche' },
+          h('button', { type: 'button', class: 'btn btn-contour', onclick: function (e) { copier(message, e.currentTarget); } }, 'Copier mon message'),
+          h('a', { class: 'btn', href: C.WHATSAPP_COMPTABLE, target: '_blank', rel: 'noopener' }, 'Écrire au comptable sur WhatsApp')));
+    }
+    return bloc;
+  }
+
+  /* ---------- Fiche d'inscription ---------- */
+  function construireFiche(d) {
+    var ligne = function (lib, val, plein) { return h('div', { class: plein ? 'plein' : '' }, h('span', null, lib), h('b', null, val)); };
+    var signature = h('div', { class: 'trait' });
+    if (C.SIGNATURE_IMAGE) signature.append(h('img', { src: C.SIGNATURE_IMAGE, alt: '' }));
+    var fiche = h('div', { class: 'fiche', id: 'fiche' },
+      h('div', { class: 'fiche-in' },
+        h('div', { class: 'filigrane', 'aria-hidden': 'true' }, C.NOM),
+        h('div', { class: 'fiche-haut' },
+          h('img', { class: 'fiche-logo', src: 'logo.webp', alt: 'Logo' }),
+          h('div', { class: 'fiche-titre-bloc' },
+            h('div', { class: 'fiche-nom' }, C.NOM),
+            h('div', { class: 'fiche-sous' }, 'Fiche d\'inscription')),
+          h('img', { class: 'fiche-photo', src: d.photo || '', alt: 'Photo de ' + d.nom })),
+        h('div', { class: 'fiche-matricule' }, h('small', null, 'Numéro matricule'), h('b', null, d.matricule || '')),
+        h('div', { class: 'fiche-infos' },
+          ligne('Nom complet', d.nom, true),
+          ligne('Pays', d.pays),
+          ligne('Date de naissance', dateFr(d.date_naissance)),
+          ligne('Date d\'adhésion', dateFr(d.date_adhesion), true)),
+        h('div', { class: 'fiche-bienvenue' },
+          h('h3', null, remplacerNom(C.TITRE_BIENVENUE)),
+          h('p', null, remplacerNom(C.TEXTE_BIENVENUE))),
+        h('div', { class: 'fiche-bas' },
+          h('div', { class: 'date' }, 'Délivrée le ' + dateFr(d.date_adhesion)),
+          h('div', { class: 'signature' }, signature, h('div', { style: 'margin-top:5px' }, 'Signature du responsable')))));
+    return h('div', { class: 'fiche-wrap' }, fiche);
+  }
+  function ajusterFiche() {
+    var w = $('.fiche-wrap'); if (!w) return;
+    var f = w.firstElementChild;
+    var k = Math.min(1, w.clientWidth / 700);
+    f.style.transform = 'scale(' + k + ')';
+    w.style.height = Math.ceil(f.offsetHeight * k) + 'px';
+  }
+  window.addEventListener('resize', ajusterFiche);
+  window.addEventListener('beforeprint', function () { var w = $('.fiche-wrap'); if (w) { w.firstElementChild.style.transform = 'none'; } });
+  window.addEventListener('afterprint', ajusterFiche);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajusterFiche);
+})();
+</script>
+</body>
+</html>
